@@ -85,7 +85,7 @@ int main(int argc, char **argv)
     server_addr.sin_port = htons(port);
 
     /* Bind */
-    if(bind(server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0 )
+    if(::bind(server_socket, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0 )
     	perror("Bind failed");
 
     /* Listen */
@@ -142,10 +142,11 @@ int main(int argc, char **argv)
 						    int UDP_socket = connect_to_udp(ip, 53);
 						    socklen_t size = sizeof(self_addr);
 						    getsockname(UDP_socket, (struct sockaddr*)&self_addr, &size);
-						    uint32_t ip_address = ntohl(self_addr.sin_addr.s_addr);
-						    char *ip_pointer, ip_addr;
+						    uint32_t ip_address = self_addr.sin_addr.s_addr;
+						    char *ip_pointer, ip_addr[16];
 						    unsigned char number;
 						    int r_number, num_chars;
+						    char *command_str = "IP";
 						    uint32_t *ip_p = &ip_address;
 						    ip_pointer = ip_addr; 
 						    for (int i = 0; i < 4; i++){
@@ -154,7 +155,10 @@ int main(int argc, char **argv)
 						      num_chars = sprintf(ip_pointer, "%d", r_number);
 						      ip_p += sizeof(char);
 						      ip_pointer += num_chars * sizeof(char);
-						      *ip_pointer = ".";
+						      if (i == 3){
+							  break;
+						      }
+						      *ip_pointer = '.';
 						      ip_pointer++;
 						    }
 						    /*char charip_addr[40];
