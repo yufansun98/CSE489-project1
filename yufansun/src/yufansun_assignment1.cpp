@@ -161,29 +161,6 @@ int main(int argc, char **argv)
 						      *ip_pointer = '.';
 						      ip_pointer++;
 						    }
-						    /*char charip_addr[40];
-						    sprintf(charip_addr, "%u", ip_address);
-						    close(UDP_socket);
-						    char *command_str = "IP";
-						    string s = "";
-						    for (int i = 0; i < 40; i++){
-						        s = s + charip_addr[i];
-						    }
-						    s.insert(8,".");
-						    s.insert(6,".");
-						    s.insert(3,".");
-						    int n = s.length();
-						    char ip_addr[n+1];
-						    strcpy(ip_addr, s.c_str());*/
-						    /*charip_addr += sizeof(size_t);
-						    *(size_t *)charip_addr = ".";
-						    charip_addr += sizeof(size_t);
-						    charip_addr += sizeof(size_t);
-						    *(size_t *)charip_addr = ".";
-						    charip_addr += sizeof(size_t);
-						    charip_addr += sizeof(size_t);
-						    *(size_t *)charip_addr = ".";
-						    strcpy(ip_addr,charip_addr);*/
 						    if (ip_addr == 0){
 						        cse4589_print_and_log("[%s:ERROR]\n", command_str);
 							cse4589_print_and_log("[%s:END]\n", command_str);
@@ -195,6 +172,9 @@ int main(int argc, char **argv)
 
 							cse4589_print_and_log("[%s:END]\n", command_str);
 						    }
+						}
+						if (strcmp(cmd, "PORT\n") == 0){
+						    cse4589_print_and_log("PORT:%d\n", port);
 						}
 						free(cmd);
                     }
