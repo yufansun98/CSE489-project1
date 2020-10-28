@@ -282,6 +282,7 @@ int main(int argc, char **argv)
 	    }
 	    else if (strcmp(msg, "PORT\n") == 0){
 	      int port;
+	       port = atoi(argv[2]);
 	      cse4589_print_and_log("PORT:%d\n", port);
 	    }
 	    else {
