@@ -68,7 +68,7 @@ int main(int argc, char **argv)
 		printf("Usage:%s [port]\n", argv[0]);
 		exit(-1);
 	}
-	if (argv[1] == "s"){
+	if (strcmp(argv[1],"s") == 0){
 	  int port, server_socket, head_socket, selret, sock_index, fdaccept=0, caddr_len;
 	  struct sockaddr_in server_addr, client_addr, self_addr;
 	  fd_set master_list, watch_list;
@@ -225,7 +225,7 @@ int main(int argc, char **argv)
 	  }
 
 	}
-	if (argv[1] == "c"){ // client
+	if (strcmp(argv[1],"c") == 0){ // client
 	  int server;
 	  server = connect_to_host(argv[1], atoi(argv[2]));
 
