@@ -237,13 +237,59 @@ int main(int argc, char **argv)
     	    memset(msg, '\0', MSG_SIZE);
 	    if(fgets(msg, MSG_SIZE-1, stdin) == NULL) //Mind the newline character that will be written to msg
 	      exit(-1);
-
+	    
 	    printf("I got: %s(size:%d chars)", msg, strlen(msg));
 
-	    printf("\nSENDing it to the remote server ... ");
-	    if(send(server, msg, strlen(msg), 0) == strlen(msg))
-	      printf("Done!\n");
-	    fflush(stdout);
+	    if (strcmp(msg, "AUTHOR\n") == 0){ 
+	      cse4589_print_and_log("I, %s, have read and understood the course academic integrity policy.\n", "yufansun");
+	    }
+	    else if (strcmp(msg, "IP\n") == 0){
+	      struct sockaddr_in self_addr;
+	      char *ip = "8.8.8.8";
+	      int UDP_socket = connect_to_udp(ip, 53);
+	      socklen_t size = sizeof(self_addr);
+	      getsockname(UDP_socket, (struct sockaddr*)&self_addr, &size);
+	      uint32_t ip_address = self_addr.sin_addr.s_addr;
+	      char *ip_pointer, ip_addr[16];
+	      unsigned char number;
+	      int r_number, num_chars;
+	      char *command_str = "IP";
+	      uint32_t *ip_p = &ip_address;
+	      ip_pointer = ip_addr; 
+	      for (int i = 0; i < 4; i++){
+		number = *(unsigned char *)ip_p;
+		r_number = (int)number;
+		num_chars = sprintf(ip_pointer, "%d", r_number);
+		ip_p += sizeof(char);
+		ip_pointer += num_chars * sizeof(char);
+		if (i == 3){
+		  break;
+		}
+		*ip_pointer = '.';
+		ip_pointer++;
+	      }
+	      if (ip_addr == 0){
+		cse4589_print_and_log("[%s:ERROR]\n", command_str);
+		cse4589_print_and_log("[%s:END]\n", command_str);
+	      }
+	      else{
+		cse4589_print_and_log("[%s:SUCCESS]\n", command_str);
+
+		cse4589_print_and_log("IP:%s\n", ip_addr);
+
+		cse4589_print_and_log("[%s:END]\n", command_str);
+	      }
+	    }
+	    else if (strcmp(msg, "PORT\n") == 0){
+	      int port;
+	      cse4589_print_and_log("PORT:%d\n", port);
+	    }
+	    else {
+	      printf("\nSENDing it to the remote server ... ");
+	      if(send(server, msg, strlen(msg), 0) == strlen(msg))
+		printf("Done!\n");
+	      fflush(stdout);
+	    }
 
 	    /* Initialize buffer to receieve response */
 	    char *buffer = (char*) malloc(sizeof(char)*BUFFER_SIZE);
