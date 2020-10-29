@@ -27,12 +27,15 @@
 #include "../include/logger.h"
 
 #include <stdlib.h>
+#include <sys/queue.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <strings.h>
 #include <string.h>
 #include <unistd.h>
 #include <string>
+#include <stdint.h>
+#include <ctype.h>
 #include <arpa/inet.h>
 
 using namespace std;
@@ -56,6 +59,15 @@ int connect_to_host(char *server_ip, int server_port);
  */
 int main(int argc, char **argv)
 {
+  struct users{
+    int list_id;
+    char hostname[30];
+    char ip_addr[30];
+    int port_num;
+    LIST_ENTRY(users) next_users;
+  };
+  LIST_HEAD(__users_list, users) users_list;
+  LIST_INIT(&users_list);
 	/*Init. Logger*/
 	cse4589_init_log(argv[2]);
 
@@ -209,8 +221,11 @@ int main(int argc, char **argv)
 		    }
 		    else {
 		      //Process incoming data from existing clients here ...
-
 		      printf("\nClient sent me: %s\n", buffer);
+		      if (strcmp(buffer, "LOGIN\n") == 0){
+		        
+			//struct User u1 = {};
+		      }
 		      printf("ECHOing it back to the remote host ... ");
 		      if(send(fdaccept, buffer, strlen(buffer), 0) == strlen(buffer))
 			printf("Done!\n");
@@ -227,8 +242,7 @@ int main(int argc, char **argv)
 	}
 	if (strcmp(argv[1],"c") == 0){ // client
 	  int server;
-	  server = connect_to_host(argv[1], atoi(argv[2]));
-
+	  
 	  while(TRUE){
 	    printf("\n[PA1-Client@CSE489/589]$ ");
 	    fflush(stdout);
@@ -282,8 +296,27 @@ int main(int argc, char **argv)
 	    }
 	    else if (strcmp(msg, "PORT\n") == 0){
 	      int port;
-	       port = atoi(argv[2]);
+	      port = atoi(argv[2]);
 	      cse4589_print_and_log("PORT:%d\n", port);
+	    }
+	    else if (strncmp(msg, "LOGIN", 5) == 0){
+	      char *commend, *ip, *port, *ip_addr;
+	      commend = strtok(msg, " ");
+	      ip = strtok(NULL, " ");
+	      port = strtok(NULL, " ");
+	      int checkip = 1;
+	      for (int i = 0; i < strlen(port); i++){
+		if(isdigit(port[i] == 0)){
+		  checkip = 0;
+		}
+	      }
+	      if (inet_pton(AF_INET, ip, &ip_addr) == 1 && checkip == 1){
+		server = connect_to_host(ip_addr, atoi(port));
+	      }
+	      else {
+		cse4589_print_and_log("[%s:ERROR]\n", "LOGIN");
+		cse4589_print_and_log("[%s:END]\n", "LOGIN");
+	      }
 	    }
 	    else {
 	      printf("\nSENDing it to the remote server ... ");
