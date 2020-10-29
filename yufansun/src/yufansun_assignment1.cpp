@@ -301,6 +301,7 @@ int main(int argc, char **argv)
 	    }
 	    else if (strncmp(msg, "LOGIN", 5) == 0){
 	      char *commend, *ip, *port, *ip_addr;
+	      struct sockaddr_in remote_server_addr;
 	      commend = strtok(msg, " ");
 	      ip = strtok(NULL, " ");
 	      port = strtok(NULL, " ");
@@ -310,7 +311,7 @@ int main(int argc, char **argv)
 		  checkip = 0;
 		}
 	      }
-	      if (inet_pton(AF_INET, ip, &ip_addr) == 1 && checkip == 1){
+	      if (inet_pton(AF_INET, ip, &remote_server_addr.sin_addr) == 1 && checkip == 1){
 		server = connect_to_host(ip, atoi(port));
 	      }
 	      else {
