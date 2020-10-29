@@ -307,6 +307,8 @@ int main(int argc, char **argv)
 	      port = strtok(NULL, " ");
 	      int checkip = 1;
 	      for (int i = 0; i < strlen(port); i++){
+		char ch = port[i];
+		printf("Character is %c \n", ch);
 		if(isdigit(port[i] == 0)){
 		  checkip = 0;
 		}
