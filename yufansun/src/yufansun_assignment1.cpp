@@ -306,12 +306,17 @@ int main(int argc, char **argv)
 	      ip = strtok(NULL, " ");
 	      port = strtok(NULL, " ");
 	      int checkip = 1;
-	      port[strlen(port) - 1] = '\0';
-	      for (int i = 0; i < strlen(port); i++){
+	      //port[strlen(port) - 1] = '\0';
+	      for (int i = 0; port[i] != '\0'; i++){
 		char ch = port[i];
 		printf("Character is %c \n", ch);
-		if(isdigit((char) port[i]) == 0){
-		  checkip = 0;
+		if ((char)port[i] == '\n'){
+		  port[i] = '\0';
+		  break;
+		}
+		if (isdigit((char) port[i]) == 0){
+		   checkip = 0;
+		   break;
 		}
 	      }
 	      if ((inet_pton(AF_INET, ip, &remote_server_addr.sin_addr) == 1) && (checkip == 1)){
