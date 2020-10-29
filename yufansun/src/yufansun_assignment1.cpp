@@ -311,7 +311,7 @@ int main(int argc, char **argv)
 		}
 	      }
 	      if (inet_pton(AF_INET, ip, &ip_addr) == 1 && checkip == 1){
-		server = connect_to_host(ip_addr, atoi(port));
+		server = connect_to_host(ip, atoi(port));
 	      }
 	      else {
 		cse4589_print_and_log("[%s:ERROR]\n", "LOGIN");
