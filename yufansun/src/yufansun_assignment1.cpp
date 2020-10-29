@@ -306,7 +306,7 @@ int main(int argc, char **argv)
 	      ip = strtok(NULL, " ");
 	      port = strtok(NULL, " ");
 	      int checkip = 1;
-	      for (int i = 0; i < strlen(port)-1; i++){
+	      for (int i = 0; i < strlen(port); i++){
 		char ch = port[i];
 		printf("Character is %c \n", ch);
 		port[strlen(port) - 1] = '\0';
